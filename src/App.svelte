@@ -9,7 +9,7 @@
   export let name
 
   const client = new ApolloClient({
-    uri: "http://localhost:4000/graphql",
+    uri: "https://zdce41a92-zc4c24716-gtw.qovery.io:4000/graphql",
 
     onError: ({ networkError, graphQLErrors }) => {
       console.log("graphQLErrors", graphQLErrors)
