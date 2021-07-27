@@ -9,7 +9,7 @@
   export let name
 
   const client = new ApolloClient({
-    uri: "http://localhost:4000/graphql",
+    uri: "http://vps-svelte.herokuapp.com/graphql",
 
     onError: ({ networkError, graphQLErrors }) => {
       console.log("graphQLErrors", graphQLErrors)
