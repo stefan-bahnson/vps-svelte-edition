@@ -22,6 +22,7 @@
   }
   let fields = { ...INITIAL_FIELDS }
   let statuses = []
+  let filteredOrders = []
 
   const orders = query(GET_ORDERS)
   const createOrder = mutation(CREATE_ORDER)
@@ -87,6 +88,11 @@
         const count = countOccurrences($orders.data.orders, status, "status")
         return { label: status, count }
       })
+      filteredOrders = meta.query.filter
+        ? $orders.data.orders.filter(
+            (order) => order.status === meta.query.filter
+          )
+        : $orders.data.orders
     }
   }
 </script>
@@ -239,7 +245,7 @@
     {/if}
     <div class="orders-table custom-scrollbar" transition:fade>
       {#if !$orders.loading}
-        {#each $orders.data.orders as order, index (order)}
+        {#each filteredOrders as order, index (order)}
           <div
             class="order"
             class:active={order.id === $activeOrder.id}
