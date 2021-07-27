@@ -79,7 +79,6 @@
       }
       return v === val ? a + 1 : a
     }, 0)
-  console.log(meta.query)
 
   $: fields = $activeOrder
   $: {
