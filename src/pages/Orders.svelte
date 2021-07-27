@@ -37,6 +37,7 @@
         variables: { input: { ...orderInput, title: title + " - copy" } },
       })
       const { createOrder: orderCopy } = res.data
+      orders.refetch()
       activeOrder.set(orderCopy)
     } catch (error) {
       console.error("failed to create order", error)
@@ -46,17 +47,10 @@
   async function deleteOrderById(id) {
     try {
       await deleteOrder({ variables: { id } })
+      orders.refetch()
       activeOrder.set({})
     } catch (error) {
       console.error("failed to delete order", error)
-    }
-  }
-
-  function handleClickOrder(selectedOrder) {
-    if ($activeOrder.id === selectedOrder.id) {
-      activeOrder.set(INITIAL_FIELDS)
-    } else {
-      activeOrder.set(selectedOrder)
     }
   }
 
@@ -66,9 +60,17 @@
   }
 
   const save = debounce((key, value) => {
-    console.log("debounce update", { [key]: value })
     updateOrder({ variables: { id: $activeOrder.id, input: { [key]: value } } })
+    orders.refetch()
   }, 300)
+
+  function handleClickOrder(selectedOrder) {
+    if ($activeOrder.id === selectedOrder.id) {
+      activeOrder.set(INITIAL_FIELDS)
+    } else {
+      activeOrder.set(selectedOrder)
+    }
+  }
 
   const countOccurrences = (arr, val, key) =>
     arr.reduce((a, v) => {
@@ -79,14 +81,7 @@
     }, 0)
   console.log(meta.query)
 
-  $: {
-    console.log("refecth")
-    fields = $activeOrder
-    debounce(() => {
-      orders.refetch()
-    }, 300)
-  }
-
+  $: fields = $activeOrder
   $: {
     if (!!$orders.data) {
       statuses = STATUSES.map((status) => {
